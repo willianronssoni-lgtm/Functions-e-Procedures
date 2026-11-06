@@ -1,0 +1,49 @@
+CREATE TABLE IF NOT EXISTS alunos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    nota1 DECIMAL(4,2) NOT NULL,
+    nota2 DECIMAL(4,2) NOT NULL
+);
+
+TRUNCATE TABLE alunos;
+INSERT INTO alunos (id, nome, nota1, nota2) VALUES 
+(5, 'Lucas Souza', 7.50, 8.50),
+(6, 'Beatriz Santos', 4.00, 3.00);
+
+DELIMITER $$
+
+CREATE FUNCTION calcular_media(n1 DECIMAL(4,2), n2 DECIMAL(4,2))
+RETURNS DECIMAL(4,2)
+DETERMINISTIC
+BEGIN
+    RETURN (n1 + n2) / 2;
+END$$
+
+CREATE FUNCTION situacao_interna(media DECIMAL(4,2))
+RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN
+    IF media >= 6.0 THEN
+        RETURN 'Aprovado';
+    ELSEIF media >= 4.0 AND media < 6.0 THEN
+        RETURN 'Recuperação';
+    ELSE
+        RETURN 'Reprovado';
+    END IF;
+END$$
+
+CREATE PROCEDURE mostrar_situacao(aluno_id INT)
+BEGIN
+    SELECT 
+        nome, 
+        nota1, 
+        nota2, 
+        calcular_media(nota1, nota2) AS media,
+        situacao_interna(calcular_media(nota1, nota2)) AS situacao
+    FROM alunos
+    WHERE id = aluno_id;
+END$$
+
+DELIMITER ;
+
+CALL mostrar_situacao(5);
