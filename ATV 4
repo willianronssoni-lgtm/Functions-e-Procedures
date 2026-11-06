@@ -1,0 +1,25 @@
+CREATE TABLE IF NOT EXISTS alunos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    nota DECIMAL(4,2) DEFAULT 0.00
+);
+
+TRUNCATE TABLE alunos;
+INSERT INTO alunos (id, nome, nota) VALUES 
+(5, 'ADILSON CHAUCHUTY', 7.50),
+(6, 'Beatriz Santos', 6.00);
+
+DELIMITER $$
+
+CREATE PROCEDURE aumentar_nota(aluno_id INT, valor_aumento DECIMAL(4,2))
+BEGIN
+    UPDATE alunos 
+    SET nota = nota + valor_aumento
+    WHERE id = aluno_id;
+END$$
+
+DELIMITER ;
+
+CALL aumentar_nota(5, 1.00);
+
+SELECT * FROM alunos WHERE id = 5;
