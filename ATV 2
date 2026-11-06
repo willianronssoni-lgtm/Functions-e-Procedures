@@ -1,0 +1,20 @@
+DELIMITER $$
+
+CREATE FUNCTION situacao_aluno(media DECIMAL(4,2))
+RETURNS VARCHAR(20)
+DETERMINISTIC
+BEGIN
+    IF media >= 6.0 THEN
+        RETURN 'Aprovado';
+    ELSEIF media >= 4.0 AND media < 6.0 THEN
+        RETURN 'Recuperação';
+    ELSE
+        RETURN 'Reprovado';
+    END IF;
+END$$
+
+DELIMITER ;
+
+SELECT situacao_aluno(7.5) AS Teste_Aprovado;
+SELECT situacao_aluno(5.0) AS Teste_Recuperacao;
+SELECT situacao_aluno(3.2) AS Teste_Reprovado;
